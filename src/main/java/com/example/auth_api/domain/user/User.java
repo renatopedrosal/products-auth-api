@@ -28,6 +28,9 @@ public class User implements UserDetails {
 
     private String login;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     private UserRole role;
 
     @Override
