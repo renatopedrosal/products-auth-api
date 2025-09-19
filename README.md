@@ -109,22 +109,16 @@ com.example.auth_api
 
 ---
 
-## 🗄️ Usuários e Dados Iniciais
+## 🗄️ Dados Iniciais
 Ao iniciar, o banco H2 já terá alguns registros (inseridos via **Flyway**):
 
-### Usuários
-| Login  | Senha     | Role  |
-|--------|-----------|-------|
-| admin  | admin123  | ADMIN |
-| user1  | user123   | USER  |
-
-> Observação: no migration os passwords foram inseridos com `{noop}` para testes em memória. Em produção, utilize senhas criptografadas (BCrypt).
-
 ### Produtos
-- Notebook Dell (R$ 4500)  
-- Monitor LG 24" (R$ 950)  
-- Teclado Mecânico (R$ 350)  
-- Mouse Gamer (R$ 250)  
+| ID | Name              | Price |
+|----|-------------------|-------|
+| p1 | Notebook Dell     | 4500  |
+| p2 | Monitor LG 24"    | 950   |
+| p3 | Teclado Mecânico  | 350   |
+| p4 | Mouse Gamer       | 250   |
 
 ---
 
