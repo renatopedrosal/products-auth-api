@@ -61,7 +61,7 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "Produto atualizado",
             content = @Content(schema = @Schema(implementation = Product.class)))
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product product) {
+    public ResponseEntity<Product> update(@PathVariable @Valid String id, @RequestBody @Valid Product product) {
         return productService.updateProduct(id, product)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -71,7 +71,7 @@ public class ProductController {
     @Operation(summary = "Deletar produto existente")
     @ApiResponse(responseCode = "204", description = "Produto deletado")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable @Valid String id) {
         if (productService.deleteProduct(id)) {
             return ResponseEntity.noContent().build();
         } else {
