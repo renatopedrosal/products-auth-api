@@ -3,7 +3,7 @@ package com.example.auth_api.controllers;
 import com.example.auth_api.domain.product.Product;
 import com.example.auth_api.domain.product.ProductRequestDTO;
 import com.example.auth_api.domain.product.ProductResponseDTO;
-import com.example.auth_api.repositories.ProductRepository;
+import com.example.auth_api.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,26 +24,58 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class ProductController {
     @Autowired
-    ProductRepository repository;
-
-    @PostMapping
-    @Operation(summary = "Criar novo produto")
-    @ApiResponse(responseCode = "201", description = "Produto criado",
-            content = @Content(schema = @Schema(implementation = Product.class)))
-    public ResponseEntity postProduct(@RequestBody @Valid ProductRequestDTO body){
-        Product newProduct = new Product(body);
-
-        this.repository.save(newProduct);
-        return ResponseEntity.ok().build();
-    }
+    ProductService productService;
 
     @GetMapping
     @Operation(summary = "Listar produtos", description = "Retorna todos os produtos")
     @ApiResponse(responseCode = "200", description = "Lista de produtos",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = Product.class))))
-    public ResponseEntity getAllProducts(){
-        List<ProductResponseDTO> productList = this.repository.findAll().stream().map(ProductResponseDTO::new).toList();
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductResponseDTO> productList = this.productService.findAllProducts().stream().map(ProductResponseDTO::new).toList();
 
         return ResponseEntity.ok(productList);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Buscar produto por ID")
+    @ApiResponse(responseCode = "200", description = "Produto encontrado",
+            content = @Content(schema = @Schema(implementation = Product.class)))
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    public ResponseEntity<Product> getById(@PathVariable String id) {
+        return productService.findProductById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    @Operation(summary = "Criar novo produto")
+    @ApiResponse(responseCode = "201", description = "Produto criado",
+            content = @Content(schema = @Schema(implementation = Product.class)))
+    public ResponseEntity<Product> postProduct(@RequestBody @Valid ProductRequestDTO body) {
+        Product newProduct = productService.createProduct(body);
+        return ResponseEntity.ok(newProduct);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar produto existente")
+    @ApiResponse(responseCode = "200", description = "Produto atualizado",
+            content = @Content(schema = @Schema(implementation = Product.class)))
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product product) {
+        return productService.updateProduct(id, product)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar produto existente")
+    @ApiResponse(responseCode = "204", description = "Produto deletado")
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        if (productService.deleteProduct(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
