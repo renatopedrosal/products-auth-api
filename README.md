@@ -13,6 +13,7 @@ Permite cadastro/login de usuários, autenticação via token JWT, proteção de
 - **H2 Database (em memória)**
 - **Flyway (migrações de banco)**
 - **Maven**
+- **Swagger (OpenAPI 3)**
 
 ---
 
@@ -41,6 +42,13 @@ A API estará disponível em:
 
 ---
 
+## 📖 Documentação da API (Swagger)
+
+Este projeto utiliza Swagger UI para documentação e testes interativos.
+
+- Acesse a interface em: 👉 `http://localhost:8080/swagger-ui.html`
+- Para chamadas autenticadas, clique em Authorize e insira o token JWT no formato: `Bearer seu_token_aqui`
+
 ## 🔑 Configurações
 O projeto usa variáveis de ambiente que podem ser configuradas no `application.properties`:
 
@@ -55,6 +63,9 @@ spring.jpa.hibernate.ddl-auto=update
 spring.flyway.enabled=true
 
 api.security.token.secret=meuSegredoJWT
+
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
 ```
 
 ### Variáveis principais:
@@ -71,6 +82,7 @@ api.security.token.secret=meuSegredoJWT
 - Proteção de rotas com Spring Security  
 - Cadastro de produto (apenas ADMIN)  
 - Listagem de produtos (qualquer usuário autenticado)
+- Documentação interativa com Swagger
 
 ---
 
@@ -90,10 +102,13 @@ com.example.auth_api
 │       ├── User.java
 │       └── UserRole.java
 │
-├── infra.security
-│   ├── SecurityConfigurations.java
-│   ├── SecurityFilter.java
-│   └── TokenService.java
+├── infra
+│   ├── config
+│       └── SwaggerConfig.java
+│   └── user
+│       ├── SecurityConfigurations.java
+│       ├── SecurityFilter.java
+│       └── TokenService.java
 │
 ├── repositories
 │   ├── ProductRepository.java
