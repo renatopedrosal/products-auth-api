@@ -146,7 +146,7 @@ POST /auth/login
 Content-Type: application/json
 
 {
-  "login": "admin",
+  "login": "admin@email.com",
   "password": "admin123"
 }
 ```
@@ -163,7 +163,7 @@ POST /auth/register
 Content-Type: application/json
 
 {
-  "login": "novoUser",
+  "login": "newuser@email.com",
   "password": "123456",
   "role": "USER"
 }
@@ -188,6 +188,24 @@ Content-Type: application/json
   "name": "Cadeira Gamer",
   "price": 1200
 }
+```
+
+#### Atualizar Produto (apenas ADMIN)
+```http
+PUT /product/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Cadeira Gamer",
+  "price": 1200
+}
+```
+
+#### Deletar Produto (apenas ADMIN)
+```http
+DELETE /product/{id}
+Authorization: Bearer {token}
 ```
 
 ---
