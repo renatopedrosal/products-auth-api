@@ -31,7 +31,8 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "Lista de produtos",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = Product.class))))
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        List<ProductResponseDTO> productList = this.productService.findAllProducts().stream().map(ProductResponseDTO::new).toList();
+        List<ProductResponseDTO> productList = this.productService.findAllProducts()
+                .stream().map(ProductResponseDTO::new).toList();
 
         return ResponseEntity.ok(productList);
     }
@@ -42,9 +43,7 @@ public class ProductController {
             content = @Content(schema = @Schema(implementation = Product.class)))
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     public ResponseEntity<Product> getById(@PathVariable String id) {
-        return productService.findProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
     @PostMapping
@@ -62,9 +61,7 @@ public class ProductController {
             content = @Content(schema = @Schema(implementation = Product.class)))
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     public ResponseEntity<Product> update(@PathVariable @Valid String id, @RequestBody @Valid Product product) {
-        return productService.updateProduct(id, product)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 
     @DeleteMapping("/{id}")
@@ -72,10 +69,7 @@ public class ProductController {
     @ApiResponse(responseCode = "204", description = "Produto deletado")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     public ResponseEntity<Void> delete(@PathVariable @Valid String id) {
-        if (productService.deleteProduct(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }
